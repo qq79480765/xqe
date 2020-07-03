@@ -49,6 +49,9 @@ public class MainActivity extends Activity {
             int color = (int) (Math.random() * 0x00FFFFFF + 0xFF000001);
             btn_help.setTextColor(color);
         });
+        if (isUpdate(this)){
+            Toast.makeText(this,"本APP只为学习研究用，请于24小时内卸载本APP。",Toast.LENGTH_LONG).show();
+        }
         //获取权限
         requestPermission(this);
     }

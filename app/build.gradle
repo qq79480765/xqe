@@ -22,6 +22,7 @@ android {
             keyAlias "test"
             keyPassword "123456"
         }
+        //非正式打包key
         release {
             storeFile file("doc/yujingtest.jks")
             storePassword "123456"
