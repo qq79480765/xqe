@@ -1,0 +1,95 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "xqe.yuji"
+        minSdkVersion 19
+        targetSdkVersion 28
+        versionCode 20200703
+        versionName "1.3"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    //签名
+    signingConfigs {
+        debug {
+            storeFile file("doc/yujingtest.jks")
+            storePassword "123456"
+            keyAlias "test"
+            keyPassword "123456"
+        }
+        release {
+            storeFile file("doc/yujingtest.jks")
+            storePassword "123456"
+            keyAlias "test"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        debug {
+            manifestPlaceholders = ["app_name": "@string/app_name"]
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            versionNameSuffix "-debug"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.debug
+        }
+        release {
+            manifestPlaceholders = ["app_name": "@string/app_name"]
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            //混淆
+            minifyEnabled false
+            //Zipalign优化
+            zipAlignEnabled false
+            // 移除无用的resource文件
+            shrinkResources false
+            //前一部分代表系统默认的android程序的混淆文件，该文件已经包含了基本的混淆声明，后一个文件是自己的定义混淆文件
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    //打包
+    android.applicationVariants.all { variant ->
+        //def appName = variant.productFlavors[0].name //获取渠道名称
+        def appName = "XQE_YUJI" //rootProject.name
+        def createDate = new Date().format("YYYYMMdd", TimeZone.getTimeZone("GMT+08:00"))
+        def createTime = new Date().format("HHmmss", TimeZone.getTimeZone("GMT+08:00"))
+        variant.outputs.all {
+            //variant.getPackageApplicationProvider().get().outputDirectory = new File(project.projectDir.absolutePath + "/build/apk")
+            //判断是release还是debug版本
+            if (variant.buildType.name == "release") {
+                it.outputFileName = "${appName}_v${defaultConfig.versionName}_${versionCode}_${createDate}_${createTime}_release.apk"
+            } else if (variant.buildType.name == "debug") {
+                it.outputFileName = "${appName}_v${defaultConfig.versionName}_${versionCode}_${createDate}_${createTime}_debug.apk"
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures{
+        dataBinding = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.android.support:design:28.0.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    // Xposed
+    compileOnly 'de.robv.android.xposed:api:82'
+    compileOnly 'de.robv.android.xposed:api:82:sources'
+    // https://mvnrepository.com/artifact/com.alibaba/fastjson
+    implementation group: 'com.alibaba', name: 'fastjson', version: '1.2.72'
+}

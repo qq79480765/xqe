@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_unactive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="未激活"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FFFF0000" />
+
+    <TextView
+        android:id="@+id/tv_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#FF000000" />
+
+    <Button
+        android:id="@+id/btn_forest_log"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:onClick="onClick"
+        android:text="森林日志"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_farm_log"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:onClick="onClick"
+        android:text="农场日志"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_other_log"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button"
+        android:onClick="onClick"
+        android:text="其他日志"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_help"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button"
+        android:gravity="center|start"
+        android:onClick="onClick"
+        android:padding="12dp"
+        android:text="看不到我看不到我看不到我"
+        android:textAllCaps="false"
+        android:textColor="#FF000000" />
+
+</LinearLayout>
+
