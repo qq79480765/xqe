@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -43,10 +44,15 @@ public class MainActivity extends Activity {
         if (strArray == null)
             strArray = getResources().getStringArray(R.array.sentences);
         btn_help.setText(strArray[RandomUtils.nextInt(0, strArray.length)]);
-        btn_help.setOnClickListener(v -> btn_help.setText(strArray[RandomUtils.nextInt(0, strArray.length)]));
+        btn_help.setOnClickListener(v -> {
+            btn_help.setText(strArray[RandomUtils.nextInt(0, strArray.length)]);
+            int color = (int) (Math.random() * 0x00FFFFFF + 0xFF000001);
+            btn_help.setTextColor(color);
+        });
         //获取权限
         requestPermission(this);
     }
+
     private void requestPermission(Context context) {
         PackageInfo packageInfo = null;
         try {
@@ -66,6 +72,7 @@ public class MainActivity extends Activity {
             ActivityCompat.requestPermissions(this, toApplyList.toArray(tmpList), 888);
         }
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -119,7 +126,6 @@ public class MainActivity extends Activity {
                         .setComponentEnabledSetting(new ComponentName(this, getClass().getCanonicalName() + "Alias"), state, PackageManager.DONT_KILL_APP);
                 item.setChecked(!item.isChecked());
                 break;
-
             case 2:
                 if (FileUtils.copyTo(FileUtils.getStatisticsFile(), FileUtils.getExportedStatisticsFile()))
                     Toast.makeText(this, "Export success", Toast.LENGTH_SHORT).show();
@@ -128,7 +134,7 @@ public class MainActivity extends Activity {
             case 3:
                 if (FileUtils.copyTo(FileUtils.getExportedStatisticsFile(), FileUtils.getStatisticsFile())) {
                     tv_statistics.setText(Statistics.getText());
-                    Toast.makeText(this, "Import success",  Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Import success", Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -137,13 +143,49 @@ public class MainActivity extends Activity {
                 break;
             case 5:
                 startActivity(new Intent(this, AboutActivity.class));
+                TextView tv_unactive = findViewById(R.id.tv_unactive);
+                tv_unactive.setTag(isModuleActive());
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    //是否激活
+    //为了不被混淆给干掉此方法。多处调用
     public boolean isModuleActive() {
+        return (findViewById(R.id.tv_unactive).getVisibility() == View.GONE);
+    }
+
+    //是否更新
+    public static boolean isUpdate(Context context) {
+        int versionCode = getVersionCode(context, context.getPackageName());
+        String versionName = getVersionName(context, context.getPackageName());
+        SharedPreferences shared = context.getSharedPreferences("AppVersion", 0);
+        if (versionCode != shared.getInt("versionCode", -1) || !versionName.equals(shared.getString("versionName", ""))) {
+            // 如果版本号有变化
+            SharedPreferences.Editor share = context.getSharedPreferences("AppVersion", 0).edit();
+            share.putString("versionName", versionName);// 写入数据
+            share.putInt("versionCode", versionCode);
+            share.apply();
+            return true;
+        }
         return false;
+    }
+
+    public static int getVersionCode(Context context, String packageName) {
+        int verCode = -1;
+        try {
+            verCode = context.getPackageManager().getPackageInfo(packageName, 0).versionCode;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return verCode;
+    }
+
+    public static String getVersionName(Context context, String packageName) {
+        String verName = "";
+        try {
+            verName = context.getPackageManager().getPackageInfo(packageName, 0).versionName;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return verName;
     }
 }

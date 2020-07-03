@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.View;
 import android.widget.TextView;
 
 import pansong291.xposed.quickenergy.R;
@@ -52,10 +51,14 @@ public class AboutActivity   extends Activity {
         TextView tvInfo=findViewById(R.id.tv_info2);
         tvInfo.setText("使用\n" +
                 "1.自启请配合Xposed edge 使用\n" +
-                "2.因为持续监测十分耗电，建议edge设置成早上7点强杀支付宝再启动。\n" +
+                "2.因为持续监测十分耗电，建议edge设置成早上7点强杀支付宝再启动。白天其余时段无需运行\n" +
                 "感谢\n" +
                 "1.感谢作者源码，让我们得以学习研究。\n" +
                 "2.感谢蜡笔小新提供接口");
+        tvInfo.setOnClickListener(v -> {
+            int color= (int) (Math.random()*0x00FFFFFF+0xFF000001);
+            tvInfo.setTextColor(color);
+        });
     }
     private void info3() {
         TextView tvInfo=findViewById(R.id.tv_info3);
@@ -84,7 +87,7 @@ public class AboutActivity   extends Activity {
     }
     private void info6() {
         TextView tvInfo=findViewById(R.id.tv_info6);
-        tvInfo.setText("QQ群：154714366");
+        tvInfo.setText("");
     }
 }
 

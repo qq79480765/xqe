@@ -3,6 +3,7 @@ package pansong291.xposed.quickenergy.hook;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -16,18 +17,17 @@ import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import pansong291.xposed.quickenergy.AntCooperate;
 import pansong291.xposed.quickenergy.AntFarm;
-import pansong291.xposed.quickenergy.antForest.AntForest;
-import pansong291.xposed.quickenergy.antForest.AntForestNotification;
-import pansong291.xposed.quickenergy.antForest.AntForestToast;
 import pansong291.xposed.quickenergy.AntMember;
 import pansong291.xposed.quickenergy.AntSports;
 import pansong291.xposed.quickenergy.KBMember;
-import pansong291.xposed.quickenergy.ui.MainActivity;
+import pansong291.xposed.quickenergy.antForest.AntForest;
+import pansong291.xposed.quickenergy.antForest.AntForestNotification;
+import pansong291.xposed.quickenergy.antForest.AntForestToast;
 import pansong291.xposed.quickenergy.util.Config;
 import pansong291.xposed.quickenergy.util.Log;
 import pansong291.xposed.quickenergy.util.Statistics;
+import pansong291.xposed.quickenergy.util.YLog;
 
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 
 public class XposedHook implements IXposedHookLoadPackage {
     private static final String TAG = XposedHook.class.getCanonicalName();
@@ -40,7 +40,14 @@ public class XposedHook implements IXposedHookLoadPackage {
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
         //检查自己是否激活
         if ("xqe.yuji".equals(lpparam.packageName)) {
-            findAndHookMethod("pansong291.xposed.quickenergy.ui.MainActivity", lpparam.classLoader, "isModuleActive", XC_MethodReplacement.returnConstant(true));
+            XposedHelpers.findAndHookMethod("pansong291.xposed.quickenergy.ui.MainActivity", lpparam.classLoader, "isModuleActive", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    YLog.e("1111111111111111111111111111111111111111111111");
+                    param.setResult(true);
+                    super.afterHookedMethod(param);
+                }
+            });
         }
         //检查支付宝
         if (ClassMember.com_eg_android_AlipayGphone.equals(lpparam.packageName)) {
@@ -60,6 +67,7 @@ public class XposedHook implements IXposedHookLoadPackage {
                             loader = cl;
                             return this;
                         }
+
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                             Service service = (Service) param.thisObject;
@@ -151,8 +159,5 @@ public class XposedHook implements IXposedHookLoadPackage {
             Log.i(TAG, "hook " + ClassMember.matchVersion + " err:");
             Log.printStackTrace(TAG, t);
         }
-
     }
-
-
 }
