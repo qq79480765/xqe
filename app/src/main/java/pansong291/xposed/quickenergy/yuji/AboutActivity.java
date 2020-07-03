@@ -69,7 +69,7 @@ public class AboutActivity   extends Activity {
         TextView tvInfo=findViewById(R.id.tv_info4);
         tvInfo.setText("点击跳转到新的GitHub地址");
         tvInfo.setOnClickListener(v -> {
-            Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/pansong291/XQuickEnergy"));
+            Intent it2 = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/yutils/xqe"));
             startActivity(it2);
         });
     }
